@@ -2,7 +2,7 @@ package com.meetmind.backend.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.meetmind.backend.entity.User;
+import com.meetmind.backend.dto.RegisterRequest;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.meetmind.backend.service.UserService;
@@ -15,12 +15,11 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
-    public String registerUser(@RequestBody User user) {
+    public String registerUser(@RequestBody RegisterRequest request) {
 
-        userService.registerUser(user);
+        userService.registerUser(request);
 
         return "User registered successfully";
-
     }
 
 }

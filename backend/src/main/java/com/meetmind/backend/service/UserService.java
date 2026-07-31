@@ -1,5 +1,5 @@
 package com.meetmind.backend.service;
-
+import com.meetmind.backend.dto.RegisterRequest;
 import org.springframework.stereotype.Service;
 import com.meetmind.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +12,14 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void registerUser(User user) {
-        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+    public void registerUser(RegisterRequest request) {
+        User user = new User();
+
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+
+        Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
 
         if (existingUser.isPresent()) {
             throw new RuntimeException("Email already exists");
