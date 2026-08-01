@@ -1,6 +1,8 @@
 package com.meetmind.backend.service;
 import com.meetmind.backend.dto.RegisterRequest;
+import com.meetmind.backend.dto.LoginRequest;
 import org.springframework.stereotype.Service;
+import com.meetmind.backend.util.JwtUtil;
 import com.meetmind.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.meetmind.backend.entity.User;
@@ -26,9 +28,24 @@ public class UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-
     }
+
+    public String loginUser(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return jwtUtil.generateToken(user.getEmail());
+    }
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
 }
